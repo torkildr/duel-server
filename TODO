@@ -1,0 +1,18 @@
+USEPATTERN:
+   * login (possible register with email/nick)
+   * invite friend
+   * initiate duel-request to server
+   * both users are 'ready'
+   * server synchronizes both clients
+   * server notifies clients of countdown
+   * clients send back time of action
+   * server determines winner
+   * server keeps stats
+
+FUTURE
+   * QR Code
+   * graphics
+   * push notification
+   * cheat detection
+
+
