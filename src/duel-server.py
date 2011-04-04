@@ -2,7 +2,7 @@ import re
 from cgi import escape, parse_qs
 
 import sys
-sys.path.append('/var/www/tranq') # TODO
+sys.path.append('/var/http/duel-server/src') # TODO
 
 log = open('/tmp/duellog', 'wa')
 
@@ -11,7 +11,7 @@ import duel_api
 """
     URL syntax is as follows:
     <root>/<userid>/action
-"""    
+"""
 # modify record (idempotent)
 put_handlers = {}
 
@@ -19,7 +19,7 @@ put_handlers = {}
 get_handlers = { 'index' : duel_api.get_index,
                  'hello' : duel_api.get_hello,
                  'goodbye' : duel_api.get_goodbye,
-                 'dump' : duel_api.get_dump 
+                 'dump' : duel_api.get_dump
                }
 
 # create record
