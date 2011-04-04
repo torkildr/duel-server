@@ -4,7 +4,7 @@ from cgi import escape, parse_qs
 import sys
 sys.path.append('/var/http/duel-server/src') # TODO
 
-log = open('/tmp/duellog', 'wa')
+log = open('/tmp/duel-server.log', 'wa')
 
 import duel_api
 
