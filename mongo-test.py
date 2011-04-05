@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 from pymongo import Connection
-from pymongo.son_manipulator import SONManipulator
 
 import time
 
@@ -22,14 +21,14 @@ class User(object):
     	return self.timestamp
 
 result = db.users.find({"id" : "markild"})
-print result
 
-if result:
-    print "Fetching..."
-    for user in result:
-    	print user
-else:
+if not result:
     print "Inserting..."
     user = User("markild")
     db.users.insert({"id" : user.id, "time" : user.time})
+    result = db.users.find({"id" : "markild"})
+
+print "Fetching..."
+for user in result:
+    print user
 
