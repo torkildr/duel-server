@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 import cgi
 
 from WsgiInterface import *
