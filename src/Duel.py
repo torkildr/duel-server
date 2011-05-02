@@ -1,26 +1,24 @@
 import re
-from cgi import escape, parse_qs
-
 import sys
-#sys.path.append('/var/http/duel-server/live/src') # TODO
+
+from DuelApi import *
+from DuelApi.WsgiInterface import *
 
 log = open('/tmp/duel-server.log', 'wa')
-
-import duel_api
 
 """
     URL syntax is as follows:
     <root>/<userid>/action
 """
+
 # modify record (idempotent)
 put_handlers = {}
 
 # get record (non-modifying, idempotent)
-get_handlers = { 'index' : duel_api.get_index,
-                 'hello' : duel_api.get_hello,
-                 'goodbye' : duel_api.get_goodbye,
-                 'dump' : duel_api.get_dump
-               }
+get_handlers = {
+    'hello' : Api.get_hello,
+    'dump'  : Api.get_dump
+}
 
 # create record
 post_handlers = {}
@@ -28,41 +26,25 @@ post_handlers = {}
 # delete record (idempotent)
 delete_handlers = {}
 
-# not found
-not_found = duel_api.not_found
+handlers = {
+    'GET' : get_handlers,
+    'POST' : post_handlers,
+    'DELETE': delete_handlers,
+    'PUT' : put_handlers
+}
 
-handlers = {'GET' : get_handlers,
-            'POST' : post_handlers,
-            'DELETE': delete_handlers,
-            'PUT' : put_handlers
-            }
+# application entry point, handles requests
+def application(environment, start_response):
+    request = Request(environment)
 
-# boilerplate code from the internet, enchanced hello-word for mod_wsgi
-def application(environ, start_response):
-    """
-    The main WSGI application. Dispatch the current request to
-    the correct handlers
+    if not request.method in handlers:
+        response = Api.not_found(request)
+        return response.httpResponse(start_response)
 
-    If nothing matches call the `not_found` function.
-    """
-    path = environ.get('PATH_INFO', '').lstrip('/')
-    req = path.split('/')
+    if not request.action in handlers[request.method]:
+        response = Api.not_found(request)
+        return response.httpResponse(start_response)
 
-    try:
-        user = req[0]
-        action = req[1]
-        rest = req[2:]
-    except:
-        return not_found(environ, start_response, None, None)
-
-    method = environ['REQUEST_METHOD']
-    environ['duel.postdata'] = environ['wsgi.input'].read()
-
-    if not method in handlers:
-        return not_found(environ, start_response, user, rest)
-
-    if not action in handlers[method]:
-        return not_found(environ, start_response, user, rest)
-
-    return handlers[method][action](environ, start_response, user, rest)
+    response = handlers[request.method][request.action](Request(environment))
+    return response.httpResponse(start_response)
 
