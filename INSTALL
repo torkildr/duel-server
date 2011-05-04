@@ -1,7 +1,14 @@
 How to install
-______________________________________________________________________________
+--------------
+Install your favorite wsgi-server. Point it at Duel(.py). 
 
-Install your favorite wsgi-server. Point it at duel-server.py. 
-(in Apache: WSGIScriptAlias / /var/www/duel/duel-server.py)
+Apache
+------
+WSGIScriptAlias / /var/www/duel/Duel.py
 
+nginx
+-----
+uwsgi_param UWSGI_SCRIPT Duel;
+uwsgi_param UWSGI_PYHOME $document_root/src;
+uwsgi_param UWSGI_CHDIR $document_root/src;
 

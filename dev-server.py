@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 
 from wsgiref.simple_server import make_server
-import random, sys, Duel
+import random, sys
+
+from src import Duel
 
 try:
     port = int(sys.argv[1])

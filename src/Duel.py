@@ -3,14 +3,12 @@
 import re
 import sys
 
-from DuelApi import *
+from DuelApi import Api
 from DuelApi.WsgiInterface import *
-
-log = open('/tmp/duel-server.log', 'wa')
 
 """
     URL syntax is as follows:
-    <root>/<userid>/action
+    <root>/action
 """
 
 # modify record (idempotent)
@@ -39,11 +37,7 @@ handlers = {
 def application(environment, start_response):
     request = Request(environment)
 
-    if not request.method in handlers:
-        response = Api.not_found(request)
-        return response.httpResponse(start_response)
-
-    if not request.action in handlers[request.method]:
+    if not request.method in handlers or not request.action in handlers[request.method]:
         response = Api.not_found(request)
         return response.httpResponse(start_response)
 
