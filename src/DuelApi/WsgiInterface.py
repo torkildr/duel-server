@@ -25,7 +25,7 @@ class StatusCode:
 
 class Request(object):
     def _get_env(self, key, default=None):
-        if self.env.has_key(key):
+        if key in self.env:
             return self.env[key]
         return default
 
